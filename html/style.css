@@ -1,0 +1,102 @@
+body {
+    background-color: #22222200;
+    font-family: Arial, sans-serif;
+    color: #fff;
+}
+
+.menu {
+    display: none;
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #333;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    transition: opacity 0.5s ease;
+}
+
+.menu-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.menu-title i {
+    margin-right: 5px;
+}
+
+.menu-title span {
+    flex-grow: 1;
+    text-align: left;
+    margin-left: 8px;
+    /* Add some margin to the left */
+}
+
+.menu-info {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #ddd;
+}
+
+.level-box {
+    background-color: #5cda9f;
+    color: #ffffff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #444;
+    border: 1px solid #555;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.menu-item:hover {
+    background-color: #555;
+    transform: scale(1.01);
+}
+
+.menu-item-content {
+    margin-left: 10px;
+}
+
+.menu-item-header {
+    font-weight: bold;
+}
+
+.menu-item-description {
+    font-size: 0.8em;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #555;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar-fill {
+    height: 20px;
+    background: linear-gradient(to right, #44c767, #44c7a5);
+    width: 0%;
+}
+
+.xp-info {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    color: #ddd;
+}
