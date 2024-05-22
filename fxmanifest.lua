@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'SKryptz'
 description '.'
-version '1.0.1'
+version '1.0.0'
 
 client_script 'client/main.lua'
 

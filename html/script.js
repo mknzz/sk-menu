@@ -23,7 +23,6 @@ const createElement = (type, className, text) => {
   return element;
 };
 
-// Function to create a menu item
 const createMenuItem = (item) => {
   const menuItem = createElement("div", "menu-item");
   const icon = createElement("i", item.icon);
@@ -41,14 +40,19 @@ const createMenuItem = (item) => {
   menuItem.appendChild(icon);
   menuItem.appendChild(content);
   menuItem.addEventListener("click", () => {
-    if (item.event) {
+    if (item.event && !item.disabled) {
       sendEvent(item.eventType, item.event, item.eventParams);
     }
   });
+
+  if (item.disabled) {
+    menuItem.style.backgroundColor = "gray";
+    icon.className = "fa-solid fa-ban";
+  }
+
   return menuItem;
 };
 
-// Event listener for message
 window.addEventListener("message", (event) => {
   const menu = document.getElementById("menu");
   if (event.data.action === "openMenu") {
@@ -61,6 +65,7 @@ window.addEventListener("message", (event) => {
     menu.style.transform = `translate${
       position === "left" || position === "right" ? "Y" : "X"
     }(-50%)`;
+
     // Set the menu title and icon
     const menuTitle = createElement("div", "menu-title");
     const menuIcon = createElement("i", menuData.titleIcon);
@@ -68,15 +73,13 @@ window.addEventListener("message", (event) => {
     menuTitleText.id = "menu-title-text";
     menuTitle.append(menuIcon, menuTitleText);
     menu.appendChild(menuTitle);
+
     // Add the level box if levelInfo is not null or undefined
     if (menuData.levelInfo) {
-      const levelBox = createElement(
-        "div",
-        "level-box",
-        `Lvl ${menuData.levelInfo}`
-      );
+      const levelBox = createElement("div", "level-box", menuData.levelInfo);
       menuTitle.appendChild(levelBox); // Append it to the menu title
     }
+
     // Set the general description
     const menuInfo = createElement(
       "div",
@@ -85,37 +88,42 @@ window.addEventListener("message", (event) => {
     );
     menuInfo.id = "menu-info";
     menu.appendChild(menuInfo);
+
     // Create a progress bar for level experience
-    if (menuData.exp && menuData.xpNeeded) {
+    if (menuData.exp || (menuData.exp == 0 && menuData.xpNeeded)) {
       const progressBar = createElement("div", "progress-bar");
       const progressBarFill = createElement("div", "progress-bar-fill");
       progressBarFill.style.width = `${
-        (menuData.exp / menuData.xpNeeded) * 100
+        (menuData.exp / menuData.expNext) * 100
       }%`;
       progressBar.appendChild(progressBarFill);
       menu.appendChild(progressBar);
       // Display the XP needed
-      const xpInfo = createElement(
-        "div",
-        "xp-info",
-        `You need ${menuData.xpNeeded} rep to level up`
-      );
+      const xpInfo = createElement("div", "xp-info", menuData.xpNeeded);
       menu.appendChild(xpInfo);
     }
+
     // Create a menu item for each item in the menuData.items array
     menuData.items.forEach((item) => {
       menu.appendChild(createMenuItem(item));
     });
-    menu.style.display = "block";
-    menu.style.opacity = "0";
-    setTimeout(() => (menu.style.opacity = "1"), 50);
+
+    // Smooth fade in
+    requestAnimationFrame(() => {
+      menu.style.opacity = "0";
+      requestAnimationFrame(() => {
+        menu.style.display = "block";
+        requestAnimationFrame(() => {
+          menu.style.opacity = "1";
+        });
+      });
+    });
   } else if (event.data.action === "closeMenu") {
     menu.style.opacity = "0";
     setTimeout(() => (menu.style.display = "none"), 500);
   }
 });
 
-// Event listener for closing
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });

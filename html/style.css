@@ -32,7 +32,6 @@ body {
     flex-grow: 1;
     text-align: left;
     margin-left: 8px;
-    /* Add some margin to the left */
 }
 
 .menu-info {
@@ -50,6 +49,14 @@ body {
     font-size: 0.8em;
 }
 
+.job-status-box {
+    background-color: #353636;
+    color: #ffffff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
 .menu-item {
     display: flex;
     align-items: center;
@@ -59,7 +66,6 @@ body {
     border: 1px solid #555;
     cursor: pointer;
     border-radius: 3px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .menu-item:hover {
