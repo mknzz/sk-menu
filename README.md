@@ -4,13 +4,6 @@ Just a simple NUI menu for FiveM. It’s designed for our existing resources and
 
 WIP
 
-## Usage
-To open a menu, call the `OpenCustomMenu` export with the desired menu data and position.
-
-```
-exports['sk-menu']:OpenCustomMenu(menuData, 'right')
-```
-
 Testing this with our House Robbery resource
 
 ![alt text](image.png)
@@ -20,3 +13,10 @@ Testing this with our House Robbery resource
 ![alt text](image-2.png)
 
 ![alt text](image-3.png)
+
+## Usage
+To open a menu, call the `OpenCustomMenu` export with the desired menu data and position.
+
+```
+exports['sk-menu']:OpenCustomMenu(menuData, 'right')
+```
