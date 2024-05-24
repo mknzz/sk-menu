@@ -47,6 +47,7 @@ const createMenuItem = (item) => {
 
   if (item.disabled) {
     menuItem.style.backgroundColor = "gray";
+    menuItem.style.cursor = "none";
     icon.className = "fa-solid fa-ban";
   }
 
