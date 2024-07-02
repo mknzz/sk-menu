@@ -22,7 +22,27 @@ Testing this with our robbery resource
 To open a menu, call the `OpenCustomMenu` export with the desired menu data and position.
 
 ```
-exports['sk-menu']:OpenCustomMenu(menuData, 'right')
+local menuData = {
+    title = 'Test title',
+    titleIcon = 'fa-solid fa-tasks',
+    generalDescription = 'Test desccc',
+    items = {
+        {
+            header = 'item title',
+            description = 'item desccc',
+            disabled = false,
+            icon = 'fa-solid fa-tasks',
+            action = function()
+            end,
+            shouldClose = true,
+            event = 'burglary:test:test',
+            eventType = 'server',
+            eventParams = { },
+        },
+    }
+}
 ```
 
-## TODO
+```
+exports['sk-menu']:OpenCustomMenu(menuData, 'right')
+```
