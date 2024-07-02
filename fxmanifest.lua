@@ -12,7 +12,8 @@ ui_page 'html/ui.html'
 files {
     'html/ui.html',
     'html/script.js',
-    'html/style.css'
+    'html/style.css',
+    'html/images/*.png'
 }
 
 lua54 'yes'

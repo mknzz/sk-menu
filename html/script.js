@@ -25,9 +25,19 @@ const createElement = (type, className, text) => {
 
 const createMenuItem = (item) => {
   const menuItem = createElement("div", "menu-item");
-  const icon = createElement("i", item.icon);
+  let icon;
+  if (item.icon.startsWith('images/')) {
+      icon = createElement("img");
+      icon.src = `./${item.icon}`;
+  } else {
+      icon = createElement("i", item.icon);
+  }
   const content = createElement("div", "menu-item-content");
   const header = createElement("div", "menu-item-header", item.header);
+  if (item.color){
+    header.innerHTML = `<span style="color: ${item.color};">${item.header}</span>`;
+  }
+
   content.appendChild(header);
   if (item.description) {
     const description = createElement(
@@ -43,6 +53,22 @@ const createMenuItem = (item) => {
     if (item.event && !item.disabled) {
       sendEvent(item.eventType, item.event, item.eventParams);
     }
+
+    if (item.action) {
+      fetch(`https://${GetParentResourceName()}/clickedButton`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify({
+          index: item.index,
+        }),
+      });
+    }
+
+    if (item.shouldClose && !item.disabled) {
+      fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
+    }
   });
 
   if (item.disabled) {
@@ -56,6 +82,7 @@ const createMenuItem = (item) => {
 
 window.addEventListener("message", (event) => {
   const menu = document.getElementById("menu");
+
   if (event.data.action === "openMenu") {
     const { data: menuData, position } = event.data;
     menu.innerHTML = ""; // Clear the existing menu content
@@ -105,7 +132,8 @@ window.addEventListener("message", (event) => {
     }
 
     // Create a menu item for each item in the menuData.items array
-    menuData.items.forEach((item) => {
+    menuData.items.forEach((item, index) => {
+      item.index = index + 1;
       menu.appendChild(createMenuItem(item));
     });
 
@@ -121,12 +149,19 @@ window.addEventListener("message", (event) => {
     });
   } else if (event.data.action === "closeMenu") {
     menu.style.opacity = "0";
-    setTimeout(() => (menu.style.display = "none"), 500);
+    setTimeout(() => {
+      menu.style.display = "none";
+      menu.innerHTML = "";
+    }, 500);
   }
 });
 
-window.addEventListener("keydown", (event) => {
+window.addEventListener("keydown", async (event) => {
   if (event.key === "Escape") {
-    fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
+    try {
+      await fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
+    } catch (error) {
+      console.log(error)
+    }
   }
 });

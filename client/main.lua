@@ -1,18 +1,20 @@
-RegisterNUICallback('closeMenu', function()
-    SendNUIMessage({
-        action = 'closeMenu'
-    })
-    SetNuiFocus(false, false)
-end)
+-- Check if the user should be in the Fence menu for refreshing HAHA
+local shouldBeInFenceMenu = false
 
--- TODO: sketchy?
--- If the button has an event (either server or client), this function will trigger that event.
---- @param data table - The data associated with the NUI event. It should include the eventName, eventParams, and eventType ('server' or 'client').
---- @param cb function
+-- Store the functions associated with each menu item
+local savedFunctions = {}
+
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+
+-- Handle menu item events
 RegisterNUICallback('event', function(data, cb)
     local eventName = data.eventName
     local eventParams = data.eventParams
     local eventType = data.eventType
+
+    print(eventName)
 
     if eventParams then
         -- Check if it's a table of multiple parameters
@@ -41,6 +43,27 @@ RegisterNUICallback('event', function(data, cb)
     cb('ok')
 end)
 
+-- Handle menu item functions
+RegisterNUICallback('clickedButton', function(data, cb)
+    local savedFunc = savedFunctions[data.index]
+    if savedFunc then savedFunc() end
+    cb('ok')
+end)
+
+RegisterNUICallback('closeMenu', function(_, cb)
+    SendNUIMessage({
+        action = 'closeMenu'
+    })
+    SetNuiFocus(false, false)
+    savedFunctions = nil
+    shouldBeInFenceMenu = false
+    cb('ok')
+end)
+
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+
 -- Open NUI menu
 --- @param customMenuData table - The data for the custom menu.
 --- @param position string - The position where the menu should be displayed. This should be a string such as 'top', 'bottom', 'left', 'right'.
@@ -51,6 +74,25 @@ function OpenCustomMenu(customMenuData, position)
         position = position
     })
     SetNuiFocus(true, true)
+
+    SetFunctionData(customMenuData)
+
+    if customMenuData.title and customMenuData.title == 'Fence' then
+        shouldBeInFenceMenu = true
+    end
 end
 
 exports('OpenCustomMenu', OpenCustomMenu)
+
+function GetInMenu()
+    return shouldBeInFenceMenu
+end
+
+exports('GetInMenu', GetInMenu)
+
+function SetFunctionData(data)
+    savedFunctions = {}
+    for i, item in ipairs(data.items) do
+        savedFunctions[i] = item.action
+    end
+end
