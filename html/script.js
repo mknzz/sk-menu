@@ -1,74 +1,43 @@
-// Function to send event
+// Helper Functions
 const sendEvent = (eventType, eventName, eventParams) => {
   fetch(`https://${GetParentResourceName()}/event`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-    },
-    body: JSON.stringify({
-      eventType,
-      eventName,
-      eventParams,
-    }),
+    headers: { "Content-Type": "application/json; charset=UTF-8" },
+    body: JSON.stringify({ eventType, eventName, eventParams }),
   });
 };
 
-// Function to create an element with a class and text content
 const createElement = (type, className, text) => {
   const element = document.createElement(type);
   element.className = className;
-  if (text) {
-    element.textContent = text;
-  }
+  if (text) element.textContent = text;
   return element;
 };
 
 const createMenuItem = (item) => {
   const menuItem = createElement("div", "menu-item");
-  let icon;
-  if (item.icon.startsWith('images/')) {
-      icon = createElement("img");
-      icon.src = `./${item.icon}`;
-  } else {
-      icon = createElement("i", item.icon);
-  }
+  let icon = item.icon.startsWith('images/') ? createElement("img") : createElement("i", item.icon);
+  if (item.icon.startsWith('images/')) icon.src = `./${item.icon}`;
+  
   const content = createElement("div", "menu-item-content");
   const header = createElement("div", "menu-item-header", item.header);
-  if (item.color){
-    header.innerHTML = `<span style="color: ${item.color};">${item.header}</span>`;
-  }
-
+  if (item.color) header.innerHTML = `<span style="color: ${item.color};">${item.header}</span>`;
+  
   content.appendChild(header);
-  if (item.description) {
-    const description = createElement(
-      "div",
-      "menu-item-description",
-      item.description
-    );
-    content.appendChild(description);
-  }
+  if (item.description) content.appendChild(createElement("div", "menu-item-description", item.description));
+  
   menuItem.appendChild(icon);
   menuItem.appendChild(content);
   menuItem.addEventListener("click", () => {
-    if (item.event && !item.disabled) {
-      sendEvent(item.eventType, item.event, item.eventParams);
-    }
-
+    if (item.event && !item.disabled) sendEvent(item.eventType, item.event, item.eventParams);
     if (item.action) {
       fetch(`https://${GetParentResourceName()}/clickedButton`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-        body: JSON.stringify({
-          index: item.index,
-        }),
+        headers: { "Content-Type": "application/json; charset=UTF-8" },
+        body: JSON.stringify({ index: item.index }),
       });
     }
-
-    if (item.shouldClose && !item.disabled) {
-      fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
-    }
+    if (item.shouldClose && !item.disabled) fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
   });
 
   if (item.disabled) {
@@ -80,6 +49,7 @@ const createMenuItem = (item) => {
   return menuItem;
 };
 
+// Event Listeners
 window.addEventListener("message", (event) => {
   const menu = document.getElementById("menu");
 
@@ -88,11 +58,8 @@ window.addEventListener("message", (event) => {
     menu.innerHTML = ""; // Clear the existing menu content
     menu.style.position = "fixed";
     menu.style[position] = "10%";
-    menu.style[position === "left" || position === "right" ? "top" : "left"] =
-      "50%";
-    menu.style.transform = `translate${
-      position === "left" || position === "right" ? "Y" : "X"
-    }(-50%)`;
+    menu.style[position === "left" || position === "right" ? "top" : "left"] = "50%";
+    menu.style.transform = `translate${position === "left" || position === "right" ? "Y" : "X"}(-50%)`;
 
     // Set the menu title and icon
     const menuTitle = createElement("div", "menu-title");
@@ -109,11 +76,7 @@ window.addEventListener("message", (event) => {
     }
 
     // Set the general description
-    const menuInfo = createElement(
-      "div",
-      "menu-info",
-      menuData.generalDescription
-    );
+    const menuInfo = createElement("div", "menu-info", menuData.generalDescription);
     menuInfo.id = "menu-info";
     menu.appendChild(menuInfo);
 
@@ -121,9 +84,7 @@ window.addEventListener("message", (event) => {
     if (menuData.exp || (menuData.exp == 0 && menuData.xpNeeded)) {
       const progressBar = createElement("div", "progress-bar");
       const progressBarFill = createElement("div", "progress-bar-fill");
-      progressBarFill.style.width = `${
-        (menuData.exp / menuData.expNext) * 100
-      }%`;
+      progressBarFill.style.width = `${(menuData.exp / menuData.expNext) * 100}%`;
       progressBar.appendChild(progressBarFill);
       menu.appendChild(progressBar);
       // Display the XP needed

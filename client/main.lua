@@ -1,73 +1,49 @@
--- Check if the user should be in the Fence menu for refreshing HAHA
+-- Variables
 local shouldBeInFenceMenu = false
-
--- Store the functions associated with each menu item
 local savedFunctions = {}
 
-----------------------------------------------------------
-----------------------------------------------------------
-----------------------------------------------------------
-
--- Handle menu item events
-RegisterNUICallback('event', function(data, cb)
+-- Functions
+local function handleEvent(data, cb)
     local eventName = data.eventName
     local eventParams = data.eventParams
     local eventType = data.eventType
 
-    print(eventName)
-
+    local trigger = eventType == 'server' and TriggerServerEvent or TriggerEvent
     if eventParams then
-        -- Check if it's a table of multiple parameters
         if type(eventParams) == 'table' then
-            -- Unpack the table of parameters
-            if eventType == 'server' then
-                TriggerServerEvent(eventName, table.unpack(eventParams))
-            else
-                TriggerEvent(eventName, table.unpack(eventParams))
-            end
+            trigger(eventName, table.unpack(eventParams))
         else
-            if eventType == 'server' then
-                TriggerServerEvent(eventName, eventParams)
-            else
-                TriggerEvent(eventName, eventParams)
-            end
+            trigger(eventName, eventParams)
         end
     else
-        if eventType == 'server' then
-            TriggerServerEvent(eventName)
-        else
-            TriggerEvent(eventName)
-        end
+        trigger(eventName)
     end
 
     cb('ok')
-end)
+end
 
--- Handle menu item functions
-RegisterNUICallback('clickedButton', function(data, cb)
+local function handleClick(data, cb)
     local savedFunc = savedFunctions[data.index]
     if savedFunc then savedFunc() end
     cb('ok')
-end)
+end
 
-RegisterNUICallback('closeMenu', function(_, cb)
-    SendNUIMessage({
-        action = 'closeMenu'
-    })
+local function handleClose(_, cb)
+    SendNUIMessage({ action = 'closeMenu' })
     SetNuiFocus(false, false)
     savedFunctions = nil
     shouldBeInFenceMenu = false
     cb('ok')
-end)
+end
 
-----------------------------------------------------------
-----------------------------------------------------------
-----------------------------------------------------------
+local function setFunctionData(data)
+    savedFunctions = {}
+    for i, item in ipairs(data.items) do
+        savedFunctions[i] = item.action
+    end
+end
 
--- Open NUI menu
---- @param customMenuData table - The data for the custom menu.
---- @param position string - The position where the menu should be displayed. This should be a string such as 'top', 'bottom', 'left', 'right'.
-function OpenCustomMenu(customMenuData, position)
+local function openCustomMenu(customMenuData, position)
     SendNUIMessage({
         action = 'openMenu',
         data = customMenuData,
@@ -75,24 +51,20 @@ function OpenCustomMenu(customMenuData, position)
     })
     SetNuiFocus(true, true)
 
-    SetFunctionData(customMenuData)
+    setFunctionData(customMenuData)
 
     if customMenuData.title and customMenuData.title == 'Fence' then
         shouldBeInFenceMenu = true
     end
 end
 
-exports('OpenCustomMenu', OpenCustomMenu)
-
-function GetInMenu()
+-- Exports
+exports('OpenCustomMenu', openCustomMenu)
+exports('GetInMenu', function()
     return shouldBeInFenceMenu
-end
+end)
 
-exports('GetInMenu', GetInMenu)
-
-function SetFunctionData(data)
-    savedFunctions = {}
-    for i, item in ipairs(data.items) do
-        savedFunctions[i] = item.action
-    end
-end
+-- Callbacks
+RegisterNUICallback('event', handleEvent)
+RegisterNUICallback('clickedButton', handleClick)
+RegisterNUICallback('closeMenu', handleClose)
