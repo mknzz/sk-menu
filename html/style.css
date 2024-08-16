@@ -1,7 +1,7 @@
 body {
     background-color: #22222200;
     font-family: 'Roboto', sans-serif;
-    color: #fff;
+    color: #e0e0e0;
 }
 
 .menu {
@@ -10,8 +10,8 @@ body {
     max-width: 300px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #333;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #1f1f1f, #383838);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     transition: opacity 0.5s ease;
 }
@@ -22,6 +22,7 @@ body {
     align-items: center;
     font-size: 24px;
     margin-bottom: 10px;
+    color: #5cda9f;
 }
 
 .menu-title i {

@@ -41,9 +41,9 @@ const createMenuItem = (item) => {
   });
 
   if (item.disabled) {
-    menuItem.style.backgroundColor = "gray";
+    menuItem.style.backgroundColor = "dimgrey";
     menuItem.style.cursor = "none";
-    icon.className = "fa-solid fa-ban";
+    //icon.className = "fa-solid fa-ban";
   }
 
   return menuItem;
@@ -57,7 +57,7 @@ window.addEventListener("message", (event) => {
     const { data: menuData, position } = event.data;
     menu.innerHTML = ""; // Clear the existing menu content
     menu.style.position = "fixed";
-    menu.style[position] = "10%";
+    menu.style[position] = "15%";
     menu.style[position === "left" || position === "right" ? "top" : "left"] = "50%";
     menu.style.transform = `translate${position === "left" || position === "right" ? "Y" : "X"}(-50%)`;
 
