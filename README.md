@@ -1,6 +1,6 @@
 # sk-menu
 
-Just a simple NUI menu for FiveM. It’s designed for our existing resources and will also serve as a fundamental component in our next project.
+A simple and clean NUI menu for FiveM, specifically designed to complement the sk-burglary script. We recommend using this menu with sk-burglary for auto refreshing, enhanced level information, and a smoother experience.
 
 ![alt text](sk-menu-burga.png)
 
