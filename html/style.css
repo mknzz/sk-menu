@@ -1,3 +1,23 @@
+:root {
+    --primary-color: #3b82f6;
+    --primary-hover: #60a5fa;
+    --text-color: #f8fafc;
+    --text-secondary: #94a3b8;
+    --bg-primary: rgba(15, 23, 42, 0.95);
+    --bg-secondary: rgba(30, 41, 59, 0.8);
+    --hover-color: rgba(51, 65, 85, 0.9);
+    --border-color: rgba(148, 163, 184, 0.1);
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
 body {
     background-color: #22222200;
     font-family: 'Roboto', sans-serif;
@@ -8,43 +28,42 @@ body {
 }
 
 .menu {
+    position: fixed;
+    width: 400px;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
     display: none;
-    width: 80%;
-    max-width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    background: linear-gradient(135deg, #1f1f1f, #383838);
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    transform: translateY(-10px);
+    border: 1px solid var(--border-color);
 }
 
 .menu-title {
+    padding: 20px;
+    background: var(--bg-secondary);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 22px;
-    margin-bottom: 15px;
-    color: #5cda9f;
-    letter-spacing: 1px;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .menu-title i {
-    margin-right: 8px;
+    color: var(--primary-color);
+    font-size: 1.2rem;
 }
 
-.menu-title span {
-    flex-grow: 1;
-    text-align: left;
-    margin-left: 10px;
+#menu-title-text {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .menu-info {
-    text-align: center;
-    font-size: 14px;
-    margin-bottom: 15px;
-    color: #cccccc;
+    padding: 15px 20px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .level-box,
@@ -55,8 +74,18 @@ body {
 }
 
 .level-box {
-    background-color: #5cda9f;
-    color: #ffffff;
+    margin-left: auto;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--primary-color);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.level-box:hover {
+    background: rgba(59, 130, 246, 0.25);
 }
 
 .job-status-box {
@@ -65,75 +94,124 @@ body {
 }
 
 .menu-item {
+    padding: 15px 20px;
     display: flex;
     align-items: center;
-    margin-bottom: 6px;  /* Further reduce margin for tighter spacing */
-    padding: 6px;  /* Further reduce padding to decrease height */
-    background-color: #444;
-    border: 1px solid #555;
+    gap: 15px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover:not(.disabled) {
+    background: var(--hover-color);
+    border-left: 3px solid var(--primary-color);
+}
+
+.menu-item:active:not(.disabled) {
+    transform: scale(0.98);
 }
 
 .menu-item img, .menu-item i {
-    width: 28px;  /* Slightly reduce width and height */
-    height: 28px;  /* Slightly reduce width and height */
-    object-fit: cover;
-    margin-right: 8px;  /* Bring the icon and content closer together */
-    flex-shrink: 0;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.menu-item:hover:not(.disabled) i {
+    transform: scale(1.1);
+    color: var(--primary-hover);
+}
+
+.menu-item img {
+    object-fit: contain;
 }
 
 .menu-item-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex: 1;
 }
 
 .menu-item-header {
+    color: var(--text-color);
     font-weight: 500;
-    font-size: 1em;
-    color: #e2dddd;
-    letter-spacing: 0.5px;
-    margin-bottom: 1px;  /* Reduce space between header and description */
+    margin-bottom: 4px;
 }
 
 .menu-item-description {
-    font-size: 0.8em;
-    color: #cccccc;
-    margin-top: 1px;  /* Reduce space between header and description */
+    color: var(--text-secondary);
+    font-size: 0.85rem;
 }
 
-.menu-item:hover {
-    background-color: #555;
-}
-
-.menu-item i {
-    min-width: 24px;
-    text-align: center;
+.menu-item:hover .menu-item-description {
+    color: var(--text-color);
 }
 
 .progress-bar {
-    width: 100%;
-    background-color: #555;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 15px 20px;
     border-radius: 3px;
     overflow: hidden;
-    margin-top: 10px;
 }
 
 .progress-bar-fill {
-    height: 20px;
-    background: linear-gradient(to right, #44c767, #44c7a5);
-    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+    transition: width 0.5s ease;
 }
 
 .xp-info {
-    text-align: center;
-    font-size: 12px;
+    padding: 0 20px 15px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--bg-secondary);
+}
+
+/* Add status colors for items */
+.menu-item.success i { color: var(--success-color); }
+.menu-item.danger i { color: var(--danger-color); }
+
+/* Add separator between items */
+.menu-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Add textbox styling */
+.menu-item-textbox {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    width: 100%;
     margin-top: 8px;
-    margin-bottom: 20px;
-    color: #cccccc;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.menu-item-textbox:focus {
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item-textbox::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Make the item taller when it has a textbox */
+.menu-item.has-textbox {
+    padding-bottom: 20px;
 }

@@ -15,7 +15,7 @@ const createElement = (type, className, text) => {
 };
 
 const createMenuItem = (item) => {
-  const menuItem = createElement("div", "menu-item");
+  const menuItem = createElement("div", "menu-item" + (item.textbox ? " has-textbox" : ""));
   let icon = item.icon.startsWith('images/') ? createElement("img") : createElement("i", item.icon);
   if (item.icon.startsWith('images/')) icon.src = `./${item.icon}`;
   
@@ -26,24 +26,65 @@ const createMenuItem = (item) => {
   content.appendChild(header);
   if (item.description) content.appendChild(createElement("div", "menu-item-description", item.description));
   
+  // Add textbox if specified
+  if (item.textbox) {
+    const textbox = createElement("input", "menu-item-textbox");
+    textbox.type = "text";
+    textbox.placeholder = item.textbox.placeholder || "Enter text...";
+    textbox.maxLength = item.textbox.maxLength || 50;
+    content.appendChild(textbox);
+
+    // Only prevent click propagation
+    textbox.addEventListener("click", (e) => e.stopPropagation());
+  }
+  
   menuItem.appendChild(icon);
   menuItem.appendChild(content);
   menuItem.addEventListener("click", () => {
-    if (item.event && !item.disabled) sendEvent(item.eventType, item.event, item.eventParams);
+    if (item.disabled) return;
+    
+    // Get textbox value if exists
+    const textboxValue = menuItem.querySelector('.menu-item-textbox')?.value;
+    
+    if (item.event) {
+      if (item.textbox) {
+        // If there's a textbox, handle the value differently based on whether onChange exists
+        if (item.textbox.onChange) {
+          // Send original event and separate onChange event
+          sendEvent(item.eventType, item.event, item.eventParams);
+          sendEvent(item.textbox.eventType || 'client', item.textbox.onChange, textboxValue);
+        } else {
+          // No onChange, send textbox value as additional param
+          const params = item.eventParams ? 
+            Array.isArray(item.eventParams) ? 
+              [...item.eventParams, textboxValue] : 
+              [item.eventParams, textboxValue] :
+            textboxValue;
+          sendEvent(item.eventType, item.event, params);
+        }
+      } else {
+        // No textbox, send original
+        sendEvent(item.eventType, item.event, item.eventParams);
+      }
+    }
+
     if (item.action) {
       fetch(`https://${GetParentResourceName()}/clickedButton`, {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=UTF-8" },
-        body: JSON.stringify({ index: item.index }),
+        body: JSON.stringify({ 
+          index: item.index,
+          value: textboxValue 
+        }),
       });
     }
-    if (item.shouldClose && !item.disabled) fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
+    
+    if (item.shouldClose) fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
   });
 
   if (item.disabled) {
-    menuItem.style.backgroundColor = "dimgrey";
-    menuItem.style.cursor = "none";
-    //icon.className = "fa-solid fa-ban";
+    menuItem.style.backgroundColor = "#353636";
+    menuItem.style.cursor = "not-allowed";
   }
 
   return menuItem;
@@ -57,7 +98,7 @@ window.addEventListener("message", (event) => {
     const { data: menuData, position } = event.data;
     menu.innerHTML = ""; // Clear the existing menu content
     menu.style.position = "fixed";
-    menu.style[position] = "15%";
+    menu.style[position] = "25%";
     menu.style[position === "left" || position === "right" ? "top" : "left"] = "50%";
     menu.style.transform = `translate${position === "left" || position === "right" ? "Y" : "X"}(-50%)`;
 
