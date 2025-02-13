@@ -42,19 +42,18 @@ const createMenuItem = (item) => {
   menuItem.appendChild(content);
   menuItem.addEventListener("click", () => {
     if (item.disabled) return;
-    
     // Get textbox value if exists
     const textboxValue = menuItem.querySelector('.menu-item-textbox')?.value;
     
     if (item.event) {
       if (item.textbox) {
-        // If there's a textbox, handle the value differently based on whether onChange exists
-        if (item.textbox.onChange) {
-          // Send original event and separate onChange event
+        // If there's a textbox, handle the value differently based on whether event for the textbox exists
+        if (item.textbox.event) {
+          // Send original event and separate textbox event
           sendEvent(item.eventType, item.event, item.eventParams);
-          sendEvent(item.textbox.eventType || 'client', item.textbox.onChange, textboxValue);
+          sendEvent(item.textbox.eventType || 'client', item.textbox.event, textboxValue);
         } else {
-          // No onChange, send textbox value as additional param
+          // No textbox event, send textbox value as additional param to original event
           const params = item.eventParams ? 
             Array.isArray(item.eventParams) ? 
               [...item.eventParams, textboxValue] : 
@@ -98,7 +97,7 @@ window.addEventListener("message", (event) => {
     const { data: menuData, position } = event.data;
     menu.innerHTML = ""; // Clear the existing menu content
     menu.style.position = "fixed";
-    menu.style[position] = "25%";
+    menu.style[position] = "20%";
     menu.style[position === "left" || position === "right" ? "top" : "left"] = "50%";
     menu.style.transform = `translate${position === "left" || position === "right" ? "Y" : "X"}(-50%)`;
 
