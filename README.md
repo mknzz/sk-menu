@@ -1,7 +1,7 @@
 # sk-menu - FiveM NUI Menu
 ![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
 
-NUI menu for FiveM with built-in support for icons, textboxes, and dynamic content. Originally designed to complement sk-burglary but suitable for any FiveM resource.
+NUI menu for FiveM with built-in support for icons/images, textboxes, and dynamic content. Originally designed to complement sk-burglary but suitable for any FiveM resource.
 
 ![Menu Preview](sk-menu-new.png)
 
