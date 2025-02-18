@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'SKryptz'
-description '.'
+description 'Simple NUI menu for FiveM.'
 version '1.1'
 
 client_script 'client/main.lua'
