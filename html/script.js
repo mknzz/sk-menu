@@ -1,10 +1,23 @@
 // Helper Functions
-const sendEvent = (eventType, eventName, eventParams) => {
-  fetch(`https://${GetParentResourceName()}/event`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json; charset=UTF-8" },
-    body: JSON.stringify({ eventType, eventName, eventParams }),
-  });
+const sendEvent = async (eventType, eventName, eventParams) => {
+  try {
+    const response = await fetch(`https://${GetParentResourceName()}/event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify({ 
+        eventType, 
+        eventName, 
+        eventParams,
+      }),
+    });
+    const result = await response.json();
+    if (result === 'menu_closed') {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 const createElement = (type, className, text) => {
@@ -33,8 +46,6 @@ const createMenuItem = (item) => {
     textbox.placeholder = item.textbox.placeholder || "Enter text...";
     textbox.maxLength = item.textbox.maxLength || 50;
     content.appendChild(textbox);
-
-    // Only prevent click propagation
     textbox.addEventListener("click", (e) => e.stopPropagation());
   }
   
@@ -47,7 +58,7 @@ const createMenuItem = (item) => {
     
     if (item.event) {
       if (item.textbox) {
-        // If there's a textbox, handle the value differently based on whether event for the textbox exists
+        // If there's a textbox, handle the value differently based on whether an event for the textbox exists
         if (item.textbox.event) {
           // Send original event and separate textbox event
           sendEvent(item.eventType, item.event, item.eventParams);
@@ -92,6 +103,7 @@ const createMenuItem = (item) => {
 // Event Listeners
 window.addEventListener("message", (event) => {
   const menu = document.getElementById("menu");
+  if (!menu) return;
 
   if (event.data.action === "openMenu") {
     const { data: menuData, position } = event.data;
@@ -153,6 +165,9 @@ window.addEventListener("message", (event) => {
     setTimeout(() => {
       menu.style.display = "none";
       menu.innerHTML = "";
+      if (typeof event.data._cb === "function") {
+        event.data._cb('ok');
+      }
     }, 500);
   }
 });
@@ -160,7 +175,7 @@ window.addEventListener("message", (event) => {
 window.addEventListener("keydown", async (event) => {
   if (event.key === "Escape") {
     try {
-      await fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST" });
+      await fetch(`https://${GetParentResourceName()}/closeMenu`, { method: "POST", body: JSON.stringify({}) });
     } catch (error) {
       console.log(error)
     }

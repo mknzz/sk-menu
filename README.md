@@ -1,5 +1,5 @@
 # sk-menu - FiveM NUI Menu
-![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.1.1-green.svg)
 
 NUI menu for FiveM with built-in support for icons/images, textboxes, and dynamic content. Originally designed to complement sk-burglary but suitable for any FiveM resource.
 
@@ -146,3 +146,14 @@ local isInMenu = exports['sk-menu']:GetInMenu()
 - [ ] Add proper error handling for NUI callbacks
 - [ ] Add type checking for critical data structures
 - [ ] Standardize menu data property naming and structure
+
+## 🛠️ TODO
+
+| TODO                                                                 | Status    |
+|---------------------------------------------------------------------------|-----------|
+| Missing error handling for event triggers and saved functions             | ⚠️ Partial  |
+| No validation of function/event data types                                | ❌ Not done |
+| No cleanup of saved functions on menu close                               | ✅ Done     |
+| No protection against actions after menu is closed                        | ✅ Done     |
+| Add proper error handling for NUI callbacks                               | ⚠️ Partial  |
+| Standardize menu data property naming and structure                       | ❌ Not done |
