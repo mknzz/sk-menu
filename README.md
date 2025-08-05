@@ -137,18 +137,6 @@ local isInMenu = exports['sk-menu']:GetInMenu()
 
 ## 🛠️ TODO
 
-- [ ] Multiple menu instances could conflict?
-- [ ] Add menu ID tracking to ensure actions correspond to current menu?
-- [ ] Missing error handling for event triggers and saved functions
-- [ ] No validation of function/event data types
-- [ ] No cleanup of saved functions on menu close
-- [ ] No protection against actions after menu is closed
-- [ ] Add proper error handling for NUI callbacks
-- [ ] Add type checking for critical data structures
-- [ ] Standardize menu data property naming and structure
-
-## 🛠️ TODO
-
 | TODO                                                                 | Status    |
 |---------------------------------------------------------------------------|-----------|
 | Missing error handling for event triggers and saved functions             | ⚠️ Partial  |
