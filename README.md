@@ -135,8 +135,6 @@ Check if specific menu is open (Fence only atm)
 local isInMenu = exports['sk-menu']:GetInMenu()
 ```
 
-## 🛠️ TODO
-
 | TODO                                                                 | Status    |
 |---------------------------------------------------------------------------|-----------|
 | Missing error handling for event triggers and saved functions             | ⚠️ Partial  |
